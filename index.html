@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert PDF documents to Markdown format with 100% client-side processing. Privacy-first, no data transmission.">
+    <meta name="keywords" content="PDF to Markdown, document conversion, client-side processing, privacy-first">
+    <meta name="author" content="VibeFlix">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob:; connect-src 'self' blob:; worker-src 'self' blob:; wasm-src 'self' https://cdnjs.cloudflare.com https://unpkg.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>PDF to Markdown Converter - VibeFlix</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/main.css" as="style">
+    <link rel="preload" href="css/components.css" as="style">
+    <link rel="preload" href="css/responsive.css" as="style">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- PDF.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- Turndown.js for HTML to Markdown conversion -->
+    <script src="https://unpkg.com/turndown@7.1.2/dist/turndown.js"></script>
+    
+    <!-- DOMPurify for HTML sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+    
+    <!-- FileSaver.js for file downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <!-- JSZip for creating ZIP archives -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Application Container -->
+    <div id="app" class="app-container">
+        <!-- Header -->
+        <header class="app-header" role="banner">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="app-title">
+                        <span class="logo-icon">📄</span>
+                        PDF to Markdown Converter
+                    </h1>
+                    <p class="app-subtitle">100% Client-Side • Privacy-First • No Data Transmission</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button id="settings-btn" class="icon-button" aria-label="Open settings" title="Settings">
+                        <span class="icon">⚙️</span>
+                    </button>
+                    <button id="help-btn" class="icon-button" aria-label="Open help" title="Help">
+                        <span class="icon">❓</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label">Status:</span>
+                    <span id="app-status" class="status-value ready">Ready</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Files Processed:</span>
+                    <span id="files-processed" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Success Rate:</span>
+                    <span id="success-rate" class="status-value">100%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content" class="app-main" role="main">
+            <!-- Upload Section -->
+            <section class="upload-section" aria-labelledby="upload-heading">
+                <h2 id="upload-heading" class="section-title">Upload PDF Files</h2>
+                
+                <div class="upload-container">
+                    <!-- File Drop Zone -->
+                    <div id="file-drop-zone" class="file-drop-zone" 
+                         role="button" 
+                         tabindex="0" 
+                         aria-label="Drop PDF files here or click to browse"
+                         aria-describedby="upload-instructions">
+                        <div class="drop-zone-content">
+                            <div class="drop-zone-icon">📁</div>
+                            <h3 class="drop-zone-title">Drop PDF files here</h3>
+                            <p class="drop-zone-subtitle">or click to browse</p>
+                            <p id="upload-instructions" class="drop-zone-instructions">
+                                Supports multiple files • Max 50MB per file • PDF format only
+                            </p>
+                        </div>
+                        
+                        <!-- Hidden file input -->
+                        <input type="file" 
+                               id="file-input" 
+                               accept=".pdf,application/pdf" 
+                               multiple 
+                               aria-hidden="true">
+                    </div>
+                    
+                    <!-- Upload Options -->
+                    <div class="upload-options">
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="batch-processing" checked>
+                                <span class="checkmark"></span>
+                                Process files in batch
+                            </label>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-download" checked>
+                                <span class="checkmark"></span>
+                                Auto-download converted files
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Processing Section -->
+            <section id="processing-section" class="processing-section hidden" aria-labelledby="processing-heading">
+                <h2 id="processing-heading" class="section-title">Processing Files</h2>
+                
+                <div class="processing-container">
+                    <!-- Overall Progress -->
+                    <div class="progress-group">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span id="overall-progress-text" class="progress-text">0 / 0 files</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="overall-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Current File Progress -->
+                    <div class="progress-group">
+                        <div class="progress-header">
+                            <span class="progress-label">Current File</span>
+                            <span id="current-file-name" class="progress-text">-</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="current-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div id="processing-status" class="processing-status">Ready to process</div>
+                    </div>
+                    
+                    <!-- Processing Actions -->
+                    <div class="processing-actions">
+                        <button id="start-processing" class="primary-button" disabled>
+                            <span class="button-icon">▶️</span>
+                            Start Processing
+                        </button>
+                        <button id="pause-processing" class="secondary-button hidden">
+                            <span class="button-icon">⏸️</span>
+                            Pause
+                        </button>
+                        <button id="cancel-processing" class="danger-button hidden">
+                            <span class="button-icon">⏹️</span>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- File Queue Section -->
+            <section id="file-queue-section" class="file-queue-section hidden" aria-labelledby="queue-heading">
+                <h2 id="queue-heading" class="section-title">File Queue</h2>
+                
+                <div class="queue-container">
+                    <div class="queue-header">
+                        <div class="queue-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span>
+                                <span id="total-files" class="stat-value">0</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Pending:</span>
+                                <span id="pending-files" class="stat-value">0</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Completed:</span>
+                                <span id="completed-files" class="stat-value">0</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Failed:</span>
+                                <span id="failed-files" class="stat-value">0</span>
+                            </span>
+                        </div>
+                        
+                        <div class="queue-actions">
+                            <button id="clear-completed" class="secondary-button">
+                                <span class="button-icon">🗑️</span>
+                                Clear Completed
+                            </button>
+                            <button id="retry-failed" class="secondary-button">
+                                <span class="button-icon">🔄</span>
+                                Retry Failed
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="file-queue" class="file-queue" role="list">
+                        <!-- File queue items will be dynamically added here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section hidden" aria-labelledby="results-heading">
+                <h2 id="results-heading" class="section-title">Conversion Results</h2>
+                
+                <div class="results-container">
+                    <div class="results-header">
+                        <div class="results-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Success Rate:</span>
+                                <span id="conversion-success-rate" class="stat-value">100%</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total Size:</span>
+                                <span id="total-output-size" class="stat-value">0 KB</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Processing Time:</span>
+                                <span id="total-processing-time" class="stat-value">0s</span>
+                            </span>
+                        </div>
+                        
+                        <div class="results-actions">
+                            <button id="download-all" class="primary-button" disabled>
+                                <span class="button-icon">📥</span>
+                                Download All
+                            </button>
+                            <button id="download-zip" class="secondary-button" disabled>
+                                <span class="button-icon">🗜️</span>
+                                Download ZIP
+                            </button>
+                            <button id="clear-results" class="secondary-button">
+                                <span class="button-icon">🗑️</span>
+                                Clear Results
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="results-list" class="results-list" role="list">
+                        <!-- Results will be dynamically added here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar for Settings and Preview -->
+        <aside id="sidebar" class="sidebar hidden" role="complementary">
+            <!-- Settings Panel -->
+            <div id="settings-panel" class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">Settings</h3>
+                    <button id="close-settings" class="close-button" aria-label="Close settings">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <!-- Conversion Settings -->
+                    <div class="settings-group">
+                        <h4 class="settings-title">Conversion Options</h4>
+                        
+                        <div class="setting-item">
+                            <label for="markdown-flavor" class="setting-label">Markdown Flavor</label>
+                            <select id="markdown-flavor" class="setting-select">
+                                <option value="commonmark">CommonMark</option>
+                                <option value="github" selected>GitHub Flavored</option>
+                                <option value="pandoc">Pandoc</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="preserve-images" checked>
+                                <span class="checkmark"></span>
+                                Extract and preserve images
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="preserve-tables" checked>
+                                <span class="checkmark"></span>
+                                Convert tables to Markdown
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="preserve-links" checked>
+                                <span class="checkmark"></span>
+                                Preserve hyperlinks
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="smart-headings" checked>
+                                <span class="checkmark"></span>
+                                Smart heading detection
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Output Settings -->
+                    <div class="settings-group">
+                        <h4 class="settings-title">Output Options</h4>
+                        
+                        <div class="setting-item">
+                            <label for="filename-template" class="setting-label">Filename Template</label>
+                            <input type="text" id="filename-template" class="setting-input" value="{name}.md" placeholder="{name}.md">
+                            <small class="setting-help">Use {name} for original filename, {date} for current date</small>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="add-metadata" checked>
+                                <span class="checkmark"></span>
+                                Add document metadata
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="add-toc">
+                                <span class="checkmark"></span>
+                                Generate table of contents
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Settings -->
+                    <div class="settings-group">
+                        <h4 class="settings-title">Performance</h4>
+                        
+                        <div class="setting-item">
+                            <label for="max-concurrent" class="setting-label">Max Concurrent Files</label>
+                            <input type="range" id="max-concurrent" class="setting-range" min="1" max="5" value="2">
+                            <span id="max-concurrent-value" class="range-value">2</span>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label for="chunk-size" class="setting-label">Processing Chunk Size</label>
+                            <select id="chunk-size" class="setting-select">
+                                <option value="small">Small (1MB)</option>
+                                <option value="medium" selected>Medium (5MB)</option>
+                                <option value="large">Large (10MB)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div id="preview-panel" class="panel hidden">
+                <div class="panel-header">
+                    <h3 class="panel-title">Preview</h3>
+                    <button id="close-preview" class="close-button" aria-label="Close preview">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <div class="preview-tabs">
+                        <button id="preview-tab-markdown" class="tab-button active">Markdown</button>
+                        <button id="preview-tab-rendered" class="tab-button">Rendered</button>
+                    </div>
+                    
+                    <div id="preview-content" class="preview-content">
+                        <div id="preview-markdown" class="preview-pane active">
+                            <pre><code id="markdown-output"></code></pre>
+                        </div>
+                        <div id="preview-rendered" class="preview-pane">
+                            <div id="rendered-output" class="rendered-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Notifications Container -->
+        <div id="notifications" class="notifications-container" aria-live="polite" aria-atomic="true">
+            <!-- Notifications will be dynamically added here -->
+        </div>
+
+        <!-- Error Modal -->
+        <div id="error-modal" class="modal hidden" role="dialog" aria-labelledby="error-title" aria-describedby="error-message">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="error-title" class="modal-title">Error</h3>
+                    <button id="close-error-modal" class="close-button" aria-label="Close error dialog">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="error-message" class="error-message"></p>
+                    <details class="error-details">
+                        <summary>Technical Details</summary>
+                        <pre id="error-stack" class="error-stack"></pre>
+                    </details>
+                </div>
+                <div class="modal-footer">
+                    <button id="error-retry" class="primary-button">Retry</button>
+                    <button id="error-dismiss" class="secondary-button">Dismiss</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div id="help-modal" class="modal hidden" role="dialog" aria-labelledby="help-title">
+            <div class="modal-overlay"></div>
+            <div class="modal-content large">
+                <div class="modal-header">
+                    <h3 id="help-title" class="modal-title">Help & Documentation</h3>
+                    <button id="close-help-modal" class="close-button" aria-label="Close help dialog">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-content">
+                        <section class="help-section">
+                            <h4>Getting Started</h4>
+                            <ol>
+                                <li>Click the upload area or drag and drop PDF files</li>
+                                <li>Configure conversion settings if needed</li>
+                                <li>Click "Start Processing" to begin conversion</li>
+                                <li>Download individual files or all files as a ZIP</li>
+                            </ol>
+                        </section>
+                        
+                        <section class="help-section">
+                            <h4>Features</h4>
+                            <ul>
+                                <li><strong>100% Client-Side:</strong> No data leaves your device</li>
+                                <li><strong>Batch Processing:</strong> Convert multiple files at once</li>
+                                <li><strong>Smart Detection:</strong> Automatically detects headings, tables, and lists</li>
+                                <li><strong>Multiple Formats:</strong> Supports CommonMark, GitHub, and Pandoc flavors</li>
+                                <li><strong>Image Extraction:</strong> Preserves images from PDF documents</li>
+                            </ul>
+                        </section>
+                        
+                        <section class="help-section">
+                            <h4>Supported File Types</h4>
+                            <p>This converter supports PDF files up to 50MB in size. For best results, use PDFs with selectable text rather than scanned images.</p>
+                        </section>
+                        
+                        <section class="help-section">
+                            <h4>Privacy & Security</h4>
+                            <p>All processing happens locally in your browser. No files are uploaded to any server, ensuring complete privacy and security of your documents.</p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/pdf-processor.js"></script>
+    <script src="js/markdown-generator.js"></script>
+    <script src="js/structure-analyzer.js"></script>
+    <script src="js/export-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

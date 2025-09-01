@@ -1,0 +1,426 @@
+/* PDF to Markdown Converter - Responsive Styles */
+
+/* Breakpoints */
+:root {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* Mobile First Responsive Design */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 639px) {
+  /* Header adjustments */
+  .header-content {
+    padding: var(--spacing-3) var(--spacing-4);
+    flex-direction: column;
+    gap: var(--spacing-3);
+    align-items: flex-start;
+  }
+
+  .app-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .logo-icon {
+    font-size: var(--font-size-2xl);
+  }
+
+  .header-actions {
+    align-self: flex-end;
+  }
+
+  .status-bar {
+    padding: var(--spacing-2) var(--spacing-4);
+    flex-direction: column;
+    gap: var(--spacing-2);
+    align-items: flex-start;
+  }
+
+  .queue-stats,
+  .results-stats {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  /* Main content adjustments */
+  .app-main {
+    padding: var(--spacing-4);
+  }
+
+  /* Upload section */
+  .file-drop-zone {
+    padding: var(--spacing-8);
+  }
+
+  .drop-zone-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .upload-options {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  /* Processing section */
+  .processing-actions {
+    flex-direction: column;
+  }
+
+  .processing-actions .primary-button,
+  .processing-actions .secondary-button,
+  .processing-actions .danger-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Queue and results headers */
+  .queue-header,
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .queue-actions,
+  .results-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .queue-actions .secondary-button,
+  .results-actions .primary-button,
+  .results-actions .secondary-button {
+    flex: 1;
+  }
+
+  /* Queue and result items */
+  .queue-item,
+  .result-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .queue-item-info,
+  .result-item-info {
+    width: 100%;
+  }
+
+  .queue-item-details,
+  .result-item-details {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .queue-item-actions,
+  .result-item-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Sidebar adjustments */
+  .app-container.sidebar-open {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "header"
+      "main"
+      "sidebar";
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: var(--z-modal);
+    max-height: none;
+  }
+
+  .panel-content {
+    padding: var(--spacing-4);
+  }
+
+  /* Modal adjustments */
+  .modal {
+    padding: var(--spacing-2);
+  }
+
+  .modal-content {
+    max-width: none;
+    width: 100%;
+    max-height: 95vh;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: var(--spacing-4);
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .primary-button,
+  .modal-footer .secondary-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Notifications */
+  .notifications-container {
+    top: var(--spacing-2);
+    right: var(--spacing-2);
+    left: var(--spacing-2);
+    max-width: none;
+  }
+
+  /* Settings adjustments */
+  .setting-item {
+    margin-bottom: var(--spacing-3);
+  }
+
+  /* Preview adjustments */
+  .preview-content {
+    height: 300px;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 640px) and (max-width: 767px) {
+  .header-content {
+    padding: var(--spacing-4) var(--spacing-5);
+  }
+
+  .app-main {
+    padding: var(--spacing-5);
+  }
+
+  .file-drop-zone {
+    padding: var(--spacing-10);
+  }
+
+  .upload-options {
+    justify-content: center;
+  }
+
+  .processing-actions {
+    justify-content: center;
+  }
+
+  .queue-header,
+  .results-header {
+    flex-wrap: wrap;
+  }
+
+  .sidebar {
+    width: 350px;
+  }
+
+  .app-container.sidebar-open {
+    grid-template-columns: 1fr 350px;
+  }
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .header-content {
+    padding: var(--spacing-4) var(--spacing-6);
+  }
+
+  .app-main {
+    padding: var(--spacing-6);
+  }
+
+  .sidebar {
+    width: 380px;
+  }
+
+  .app-container.sidebar-open {
+    grid-template-columns: 1fr 380px;
+  }
+}
+
+/* Extra large devices (large desktops, 1280px and up) */
+@media (min-width: 1024px) {
+  .header-content {
+    max-width: 1400px;
+  }
+
+  .app-main {
+    max-width: 1400px;
+  }
+
+  .sidebar {
+    width: 400px;
+  }
+
+  .app-container.sidebar-open {
+    grid-template-columns: 1fr 400px;
+  }
+
+  /* Enhanced layouts for larger screens */
+  .upload-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-8);
+    align-items: start;
+  }
+
+  .upload-options {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .processing-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-8);
+    align-items: start;
+  }
+
+  .processing-actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+}
+
+/* Print styles */
+@media print {
+  .app-header,
+  .sidebar,
+  .notifications-container,
+  .modal {
+    display: none !important;
+  }
+
+  .app-main {
+    padding: 0;
+    max-width: none;
+  }
+
+  .section-title::before {
+    display: none;
+  }
+
+  .file-drop-zone,
+  .processing-section,
+  .upload-options,
+  .processing-actions,
+  .queue-actions,
+  .results-actions {
+    display: none !important;
+  }
+
+  .queue-item,
+  .result-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .results-list,
+  .file-queue {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --gray-100: #000000;
+    --gray-200: #000000;
+    --gray-300: #000000;
+    --gray-400: #000000;
+    --gray-500: #ffffff;
+    --gray-600: #ffffff;
+    --gray-700: #ffffff;
+    --gray-800: #ffffff;
+    --gray-900: #ffffff;
+  }
+
+  .file-drop-zone {
+    border-width: 3px;
+  }
+
+  .progress-bar-container {
+    border: 2px solid var(--gray-900);
+  }
+
+  .notification {
+    border-width: 2px;
+    border-style: solid;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-pulse {
+    animation: none;
+  }
+
+  .loading-spinner {
+    animation: none;
+    border-top-color: var(--primary-color);
+  }
+
+  .progress-fill.indeterminate {
+    animation: none;
+    width: 50%;
+  }
+}
+
+/* Focus visible support for better keyboard navigation */
+@supports selector(:focus-visible) {
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+}
+
+/* Container queries for component-level responsiveness */
+@supports (container-type: inline-size) {
+  .queue-container,
+  .results-container {
+    container-type: inline-size;
+  }
+
+  @container (max-width: 600px) {
+    .queue-header,
+    .results-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .queue-stats,
+    .results-stats {
+      width: 100%;
+    }
+
+    .queue-actions,
+    .results-actions {
+      width: 100%;
+      justify-content: stretch;
+    }
+  }
+}

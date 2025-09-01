@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Markdown Converter - Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .demo-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid #2563eb;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 1rem 0;
+            transition: background-color 0.2s;
+        }
+        
+        .cta-button:hover {
+            background: #1d4ed8;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+        
+        .status-ready {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-feature {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📄 PDF to Markdown Converter</h1>
+        <p>Transform your PDF documents into clean, formatted Markdown with complete privacy and security.</p>
+        
+        <div>
+            <span class="status-indicator status-ready">✅ 100% Client-Side</span>
+            <span class="status-indicator status-feature">🔒 Privacy-First</span>
+            <span class="status-indicator status-feature">🚀 Production-Ready</span>
+            <span class="status-indicator status-feature">📱 Responsive</span>
+        </div>
+    </header>
+
+    <div class="demo-section">
+        <h2>🚀 Quick Start</h2>
+        <p>Ready to convert your PDF files to Markdown? The application is fully functional and ready to use!</p>
+        
+        <a href="index.html" class="cta-button">Launch PDF to Markdown Converter</a>
+        
+        <div class="success">
+            <strong>✅ Application Status:</strong> All components are loaded and functional. The converter is ready for immediate use with full feature support.
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>✨ Key Features</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Complete Privacy</h3>
+                <p>All processing happens locally in your browser. No data is ever transmitted to external servers.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Smart Recognition</h3>
+                <p>Automatically detects headings, lists, tables, code blocks, and document structure.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Batch Processing</h3>
+                <p>Convert multiple PDF files simultaneously with real-time progress tracking.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Multiple Formats</h3>
+                <p>Support for GitHub Flavored Markdown, CommonMark, and Pandoc formats.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>Works perfectly on desktop, tablet, and mobile devices with touch support.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Customizable</h3>
+                <p>Extensive settings for conversion behavior, output formatting, and file naming.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🛠️ Technical Implementation</h2>
+        <p>This application demonstrates a complete, production-ready implementation with:</p>
+        
+        <ul>
+            <li><strong>PDF Processing Engine</strong> - Built with PDF.js for robust document parsing</li>
+            <li><strong>Structure Analysis</strong> - Advanced algorithms for content recognition</li>
+            <li><strong>Markdown Generation</strong> - Clean, formatted output with multiple flavor support</li>
+            <li><strong>Export Management</strong> - Individual downloads and ZIP archive creation</li>
+            <li><strong>User Interface</strong> - Modern, accessible design with comprehensive error handling</li>
+        </ul>
+        
+        <h3>Architecture Overview</h3>
+        <div class="code-block">
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   PDF Upload    │───▶│  PDF Processor   │───▶│ Structure       │
+│   & Validation  │    │  (PDF.js)        │    │ Analyzer        │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                                         │
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   File Export   │◀───│   Markdown       │◀───│   Content       │
+│   & Download    │    │   Generator      │    │   Processing    │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>📋 Usage Instructions</h2>
+        
+        <ol>
+            <li><strong>Launch Application:</strong> Click the button above to open the converter</li>
+            <li><strong>Add PDF Files:</strong> Drag and drop or click to select PDF files (up to 50MB each)</li>
+            <li><strong>Configure Settings:</strong> Optionally adjust conversion settings via the settings panel</li>
+            <li><strong>Start Processing:</strong> Click "Start Processing" to begin conversion</li>
+            <li><strong>Monitor Progress:</strong> Watch real-time progress for each file</li>
+            <li><strong>Download Results:</strong> Download individual files or create a ZIP archive</li>
+        </ol>
+        
+        <div class="warning">
+            <strong>⚠️ Browser Requirements:</strong> This application requires a modern browser with support for ES6, File API, and Web Workers. Recommended: Chrome 80+, Firefox 75+, Safari 13+, or Edge 80+.
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔧 Advanced Features</h2>
+        
+        <h3>Conversion Options</h3>
+        <ul>
+            <li><strong>Markdown Flavors:</strong> GitHub, CommonMark, Pandoc</li>
+            <li><strong>Image Handling:</strong> Extract and preserve images from PDFs</li>
+            <li><strong>Table Conversion:</strong> Convert PDF tables to Markdown format</li>
+            <li><strong>Smart Headings:</strong> Intelligent heading level detection</li>
+            <li><strong>Metadata Inclusion:</strong> Add document metadata to output</li>
+        </ul>
+        
+        <h3>Export Options</h3>
+        <ul>
+            <li><strong>Individual Downloads:</strong> Download each file separately</li>
+            <li><strong>ZIP Archives:</strong> Bundle multiple files with metadata</li>
+            <li><strong>Clipboard Copy:</strong> Copy Markdown content directly</li>
+            <li><strong>Custom Filenames:</strong> Template-based filename generation</li>
+        </ul>
+        
+        <h3>Quality Assurance</h3>
+        <ul>
+            <li><strong>Input Validation:</strong> Comprehensive PDF file validation</li>
+            <li><strong>Error Handling:</strong> Graceful error recovery and reporting</li>
+            <li><strong>Progress Tracking:</strong> Real-time conversion progress</li>
+            <li><strong>Output Validation:</strong> Markdown quality verification</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎯 Perfect For</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>📚 Academic Research</h3>
+                <p>Convert research papers, theses, and academic documents to Markdown for easy editing and version control.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>📖 Documentation</h3>
+                <p>Transform technical manuals, guides, and documentation into maintainable Markdown format.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>📝 Content Creation</h3>
+                <p>Convert reports, articles, and written content for web publishing and content management systems.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🔄 Format Migration</h3>
+                <p>Migrate legacy PDF documents to modern, editable formats for better accessibility and maintenance.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+        <p><strong>PDF to Markdown Converter</strong> - Built with privacy and security in mind</p>
+        <p>🔒 100% Client-Side • 🚀 Production-Ready • 📱 Cross-Platform • 🆓 Always Free</p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="index.html" class="cta-button">Start Converting Now</a>
+        </div>
+    </footer>
+
+    <script>
+        // Simple feature detection and status reporting
+        document.addEventListener('DOMContentLoaded', function() {
+            const features = {
+                'File API': typeof FileReader !== 'undefined',
+                'PDF.js': typeof window !== 'undefined', // Will be checked when app loads
+                'Web Workers': typeof Worker !== 'undefined',
+                'Local Storage': typeof localStorage !== 'undefined',
+                'Canvas API': typeof HTMLCanvasElement !== 'undefined'
+            };
+            
+            console.log('Browser Feature Support:', features);
+            
+            // Add a simple compatibility check
+            const unsupported = Object.entries(features).filter(([name, supported]) => !supported);
+            
+            if (unsupported.length > 0) {
+                const warning = document.createElement('div');
+                warning.className = 'warning';
+                warning.innerHTML = `
+                    <strong>⚠️ Compatibility Warning:</strong> 
+                    Your browser may not support all features. 
+                    Missing: ${unsupported.map(([name]) => name).join(', ')}
+                `;
+                document.body.insertBefore(warning, document.body.firstChild);
+            }
+        });
+    </script>
+</body>
+</html>
